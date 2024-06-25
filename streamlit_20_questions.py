@@ -9,8 +9,16 @@ from typing import Generator
 from groq import Groq
 import wikipedia
 
+st.set_page_config(page_icon="💬", layout="wide",
+                   page_title="20 Questions")
+
+try:
+    groq_api_key = st.secrets["GROQ_API_KEY"]
+except FileNotFoundError:
+    groq_api_key = os.environ.get("GROQ_API_KEY")
+
 client = Groq(
-    api_key=os.environ.get("GROQ_API_KEY"),
+    api_key=groq_api_key,
 )
 MODEL = "llama3-70b-8192"
 
@@ -62,9 +70,6 @@ def get_bot_response(message_history):
         stream=True,
     )
     return stream
-
-st.set_page_config(page_icon="💬", layout="wide",
-                   page_title="20 Questions")
 
 
 def icon(emoji: str):
