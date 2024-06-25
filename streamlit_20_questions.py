@@ -9,9 +9,13 @@ from typing import Generator
 from groq import Groq
 import wikipedia
 
+import prompts
+
+
 st.set_page_config(page_icon="💬", layout="wide",
                    page_title="20 Questions")
 
+st.write(prompts.a())
 groq_api_key = os.environ.get("GROQ_API_KEY")
 
 client = Groq(
@@ -79,15 +83,6 @@ icon("💬")
 
 st.title("20 Questions")
 st.subheader("Are you smarter than a large language model?", divider="rainbow", anchor=False)
-def clicked():
-    st.session_state.person = get_person()
-    st.session_state.page = get_wikipedia_page(st.session_state.person)
-    st.session_state.messages = set_up_bot(
-        st.session_state.person, st.session_state.page)
-    st.session_state.selected_model = None
-    st.session_state.messages = []
-    st.session_state.selected_model = None
-st.button('🔄 Reset', on_click=clicked)
 
 if "person" not in st.session_state:
     st.session_state.person = get_person()
@@ -142,6 +137,17 @@ with col2:
         step=512,
         help=f"Adjust the maximum number of tokens (words) for the model's response. Max for selected model: {max_tokens_range}"
     )
+
+def clicked():
+    st.session_state.person = get_person()
+    st.session_state.page = get_wikipedia_page(st.session_state.person)
+    st.session_state.messages = set_up_bot(
+        st.session_state.person, st.session_state.page)
+    st.session_state.selected_model = None
+    st.session_state.messages = []
+    st.session_state.selected_model = None
+# with st.sidebar:
+button = st.button('🔄 Reset', on_click=clicked)
 
 # Display chat messages from history on app rerun
 for message in st.session_state.messages:
