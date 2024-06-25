@@ -16,6 +16,7 @@ st.set_page_config(page_icon="💬", layout="wide",
 #     groq_api_key = st.secrets["GROQ_API_KEY"]
 # except FileNotFoundError:
 #     groq_api_key = os.environ.get("GROQ_API_KEY")
+st.write(st.secrets)
 groq_api_key = os.environ.get("GROQ_API_KEY")
 
 client = Groq(
