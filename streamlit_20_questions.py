@@ -12,10 +12,11 @@ import wikipedia
 st.set_page_config(page_icon="💬", layout="wide",
                    page_title="20 Questions")
 
-try:
-    groq_api_key = st.secrets["GROQ_API_KEY"]
-except FileNotFoundError:
-    groq_api_key = os.environ.get("GROQ_API_KEY")
+# try:
+#     groq_api_key = st.secrets["GROQ_API_KEY"]
+# except FileNotFoundError:
+#     groq_api_key = os.environ.get("GROQ_API_KEY")
+groq_api_key = os.environ.get("GROQ_API_KEY")
 
 client = Groq(
     api_key=groq_api_key,
