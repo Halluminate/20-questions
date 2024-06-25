@@ -171,5 +171,3 @@ if prompt := st.chat_input("Enter your guess here..."):
         
     except Exception as e:
         st.error(e, icon="🚨")
-
-    print(st.session_state)
