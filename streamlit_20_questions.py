@@ -9,13 +9,16 @@ from typing import Generator
 from groq import Groq
 import wikipedia
 
-import prompts
+import json
 
 
 st.set_page_config(page_icon="💬", layout="wide",
                    page_title="20 Questions")
 
-st.write(prompts.a())
+with open('prompts.json') as prompts:
+    prompts = json.load(prompts)
+
+
 groq_api_key = os.environ.get("GROQ_API_KEY")
 
 client = Groq(
@@ -26,12 +29,7 @@ MODEL = "llama3-70b-8192"
 def get_person():
     """Get a person's name from an LLM"""
     chat_completion = client.chat.completions.create(
-        messages=[
-            {
-                "role": "user",
-                "content": "Name someone famous enough to have their own page on Wikipedia. Only put their name, nothing else.",
-            }
-        ],
+        messages=[prompts["get_person"]["system"]], 
         model="llama3-8b-8192",
     )
 
