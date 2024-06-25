@@ -77,8 +77,17 @@ def icon(emoji: str):
     )
 icon("💬")
 
-st.header("20 Questions")
+st.title("20 Questions")
 st.subheader("Are you smarter than a large language model?", divider="rainbow", anchor=False)
+def clicked():
+    st.session_state.person = get_person()
+    st.session_state.page = get_wikipedia_page(st.session_state.person)
+    st.session_state.messages = set_up_bot(
+        st.session_state.person, st.session_state.page)
+    st.session_state.selected_model = None
+    st.session_state.messages = []
+    st.session_state.selected_model = None
+st.button('🔄 Reset', on_click=clicked)
 
 if "person" not in st.session_state:
     st.session_state.person = get_person()
