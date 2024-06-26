@@ -1,15 +1,16 @@
-# #! /usr/bin/env python3
+#! /usr/bin/env python3
 
 import os
 import copy
+import json
+import random
+from typing import Generator
 
 import streamlit as st
-from typing import Generator
 
 from groq import Groq
 import wikipedia
 
-import json
 
 
 st.set_page_config(page_icon="💬", layout="wide",
@@ -43,11 +44,21 @@ def get_wikipedia_page(person):
     except wikipedia.exceptions.PageError as pe:
         print(f"PageError: {pe} - {person} not found on Wikipedia")
         return None
+    
+def get_wikipedia_content(person):
+    try:
+        page = wikipedia.page(person)
+        return page.content
+    except wikipedia.exceptions.DisambiguationError as e:
+        return get_wikipedia_content(e.options[0])
+    except wikipedia.exceptions.PageError:
+        return None
 
 def set_up_bot(person, page):
     """Set up the bot with the person and their Wikipedia page"""
     system_content = f"You are a playing 20 questions. You are thinking of this person: {person}. The user is trying to guess this person. They will ask you yes or no questions, and you must respond accurately. For context on this person, look at their wikipedia page: {page.url}. " \
-            "If the question from the user can't be answered with a simple yes or no, respond with 'I can only answer Yes or No questions'. If the user guesses the person, respond with 'Correct!'. If the user gives up, respond with 'Better luck next time!'."
+            "If the question from the user can't be answered with a simple yes or no, respond with 'I can only answer Yes or No questions'. If the user guesses the person, respond with 'Correct!'. If the user gives up, respond with 'Better luck next time!'." \
+            "You can give the user hints if they are struggling to guess the person, but don't give away the answer. You can offer hints after a few questions have been asked."
     system_prompt = {
         "role": "system",
         "content": system_content
